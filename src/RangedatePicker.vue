@@ -127,6 +127,19 @@
 .calendar-head h2 {
   padding: 20px 0 0 20px;
   margin: 0;
+  display: inline-block;
+}
+
+.clear {
+  font-size: 14px;
+  display: inline-block;
+  margin-left: 8px;
+  color: #D0D0D0;
+  cursor: pointer;
+}
+
+.clear:hover {
+  color: #448;
 }
 
 .close:hover {
@@ -136,9 +149,9 @@
 .close{
   float: right;
   padding: 0 10px;
-  margin-top: -35px;
   font-size: 32px;
   font-weight: normal;
+  display: inline-block;
 }
 
 .calendar ul {

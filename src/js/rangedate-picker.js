@@ -388,6 +388,8 @@ export default {
       this.activeMonthStart = this.startActiveMonth
       this.activeYearStart = this.startActiveYear
       this.activeYearEnd = this.startActiveYear
+
+      this.$emit('selected', this.dateRange)
     }
   }
 }
