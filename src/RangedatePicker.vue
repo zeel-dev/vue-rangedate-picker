@@ -4,6 +4,7 @@
     <div class="calendar" :class="{'calendar-mobile ': isCompact, 'calendar-right-to-left': isRighttoLeft}" v-if="isOpen">
       <div class="calendar-head" v-if="!isCompact">
         <h2>{{captions.title}}</h2>
+        <div class="clear" @click="clear()"> clear </div>
         <i class="close" @click="toggleCalendar()">&times</i>
       </div>
       <div class="calendar-wrap">
@@ -52,7 +53,7 @@
           <li><button class="calendar-btn-apply" @click="setDateValue()">{{captions.ok_button}}</button></li>
         </ul>
       </div>
-      
+
     </div>
   </div>
 </template>

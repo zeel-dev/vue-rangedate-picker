@@ -1,7 +1,7 @@
 import fecha from 'fecha'
 
 const defaultConfig = {}
-const defaultI18n = 'ID'
+const defaultI18n = 'EN'
 const availableMonths = {
   EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November',
     'December'],
@@ -20,7 +20,8 @@ const presetRangeLabel = {
     thisMonth: 'This Month',
     lastMonth: 'Last Month',
     lastSevenSays: 'Last 7 Days',
-    lastThirtyDays: 'Last 30 Days'
+    lastThirtyDays: 'Last 30 Days',
+    future: 'Future'
   },
   ID: {
     today: 'Hari ini',
@@ -54,7 +55,7 @@ const defaultPresets = function (i18n = defaultI18n) {
       const startToday = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 0, 0)
       const endToday = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 23, 59)
       return {
-        label: presetRangeLabel[i18n].today,
+        label: presetRangeLabel['EN'].today,
         active: false,
         dateRange: {
           start: startToday,
@@ -67,7 +68,7 @@ const defaultPresets = function (i18n = defaultI18n) {
       const startMonth = new Date(n.getFullYear(), n.getMonth(), 2)
       const endMonth = new Date(n.getFullYear(), n.getMonth() + 1, 1)
       return {
-        label: presetRangeLabel[i18n].thisMonth,
+        label: presetRangeLabel['EN'].thisMonth,
         active: false,
         dateRange: {
           start: startMonth,
@@ -80,7 +81,7 @@ const defaultPresets = function (i18n = defaultI18n) {
       const startMonth = new Date(n.getFullYear(), n.getMonth() - 1, 2)
       const endMonth = new Date(n.getFullYear(), n.getMonth(), 1)
       return {
-        label: presetRangeLabel[i18n].lastMonth,
+        label: presetRangeLabel['EN'].lastMonth,
         active: false,
         dateRange: {
           start: startMonth,
@@ -93,7 +94,7 @@ const defaultPresets = function (i18n = defaultI18n) {
       const start = new Date(n.getFullYear(), n.getMonth(), n.getDate() - 5)
       const end = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1)
       return {
-        label: presetRangeLabel[i18n].lastSevenDays,
+        label: presetRangeLabel['EN'].lastSevenDays,
         active: false,
         dateRange: {
           start: start,
@@ -106,7 +107,20 @@ const defaultPresets = function (i18n = defaultI18n) {
       const start = new Date(n.getFullYear(), n.getMonth(), n.getDate() - 29)
       const end = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1)
       return {
-        label: presetRangeLabel[i18n].lastThirtyDays,
+        label: presetRangeLabel['EN'].lastThirtyDays,
+        active: false,
+        dateRange: {
+          start: start,
+          end: end
+        }
+      }
+    },
+    future: function () {
+      const n = new Date()
+      const start = new Date(n.getFullYear(), n.getMonth(), n.getDate())
+      const end = new Date(n.getFullYear() + 10, n.getMonth(), n.getDate() + 1)
+      return {
+        label: presetRangeLabel['EN'].future,
         active: false,
         dateRange: {
           start: start,
@@ -363,6 +377,17 @@ export default {
       if (!this.isCompact) {
         this.toggleCalendar()
       }
+    },
+    clear: function () {
+      this.dateRange = {}
+      this.numOfDays = 7
+      this.isFirstChoice = true
+      this.isOpen = false
+      this.presetActive = ''
+      this.showMonth = false
+      this.activeMonthStart = this.startActiveMonth
+      this.activeYearStart = this.startActiveYear
+      this.activeYearEnd = this.startActiveYear
     }
   }
 }
