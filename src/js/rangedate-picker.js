@@ -117,7 +117,7 @@ const defaultPresets = function (i18n = defaultI18n) {
     },
     future: function () {
       const n = new Date()
-      const start = new Date(n.getFullYear(), n.getMonth(), n.getDate())
+      const start = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1)
       const end = new Date(n.getFullYear() + 10, n.getMonth(), n.getDate() + 1)
       return {
         label: presetRangeLabel['EN'].future,
