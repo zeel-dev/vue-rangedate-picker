@@ -29,7 +29,7 @@
             <i class="right" @click="goNextMonth"></i>
           </div>
           <ul :class="s.daysWeeks">
-              <li v-for="item in shortDaysLocale" :key="item">{{item}}</li>
+            <li v-for="item in shortDaysLocale" :key="item">{{item}}</li>
           </ul>
           <ul v-for="r in 6" :class="[s.days]" :key="r">
             <li :class="[{[s.daysSelected]: isDateSelected(r, i, 'second', startNextMonthDay, endNextMonthDate),
