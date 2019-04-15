@@ -52,20 +52,21 @@ const defaultPresets = function (i18n = defaultI18n) {
   return {
     today: function () {
       const n = new Date()
-      const today = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0))
+      const today = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0)
+      const tomorrow = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59)
       return {
         label: presetRangeLabel['EN'].today,
         active: false,
         dateRange: {
           start: today,
-          end: today
+          end: tomorrow
         }
       }
     },
     thisMonth: function () {
       const n = new Date()
-      const startMonth = new Date(Date.UTC(n.getFullYear(), n.getMonth(), 1))
-      const endMonth = new Date(Date.UTC(n.getFullYear(), n.getMonth() + 1, 0))
+      const startMonth = new Date(n.getFullYear(), n.getMonth(), 1)
+      const endMonth = new Date(n.getFullYear(), n.getMonth() + 1, 0, 23, 59)
       return {
         label: presetRangeLabel['EN'].thisMonth,
         active: false,
@@ -77,8 +78,8 @@ const defaultPresets = function (i18n = defaultI18n) {
     },
     lastMonth: function () {
       const n = new Date()
-      const startMonth = new Date(Date.UTC(n.getFullYear(), n.getMonth() - 1, 1))
-      const endMonth = new Date(Date.UTC(n.getFullYear(), n.getMonth(), 0))
+      const startMonth = new Date(n.getFullYear(), n.getMonth() - 1, 1)
+      const endMonth = new Date(n.getFullYear(), n.getMonth(), 0, 23, 59)
       return {
         label: presetRangeLabel['EN'].lastMonth,
         active: false,
@@ -90,8 +91,8 @@ const defaultPresets = function (i18n = defaultI18n) {
     },
     last7days: function () {
       const n = new Date()
-      const start = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate() - 6))
-      const end = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()))
+      const start = new Date(n.getFullYear(), n.getMonth(), n.getDate() - 6)
+      const end = new Date(n.getFullYear(), n.getMonth(), n.getDate())
       return {
         label: presetRangeLabel['EN'].lastSevenDays,
         active: false,
@@ -103,8 +104,8 @@ const defaultPresets = function (i18n = defaultI18n) {
     },
     last30days: function () {
       const n = new Date()
-      const start = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate() - 30))
-      const end = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()))
+      const start = new Date(n.getFullYear(), n.getMonth(), n.getDate() - 30)
+      const end = new Date(n.getFullYear(), n.getMonth(), n.getDate())
       return {
         label: presetRangeLabel['EN'].lastThirtyDays,
         active: false,
@@ -117,7 +118,7 @@ const defaultPresets = function (i18n = defaultI18n) {
     future: function () {
       const n = new Date()
       const start = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1)
-      const end = new Date(n.getFullYear() + 10, n.getMonth(), n.getDate() + 1)
+      const end = new Date(n.getFullYear() + 1, n.getMonth() + 1, n.getDate())
       return {
         label: presetRangeLabel['EN'].future,
         active: false,
@@ -222,7 +223,7 @@ export default {
       return Object.assign({}, defaultStyle, this.style)
     },
     startMonthDay: function () {
-      return new Date(Date.UTC(this.activeYearStart, this.activeMonthStart, 1)).getDay()
+      return new Date(this.activeYearStart, this.activeMonthStart, 1).getDay()
     },
     startNextMonthDay: function () {
       if (this.startNextActiveMonth > 0) {
@@ -232,10 +233,10 @@ export default {
       }
     },
     endMonthDate: function () {
-      return new Date(Date.UTC(this.activeYearEnd, this.startNextActiveMonth, 0)).getDate()
+      return new Date(this.activeYearEnd, this.startNextActiveMonth, 0).getDate()
     },
     endNextMonthDate: function () {
-      return new Date(Date.UTC(this.activeYearEnd, this.activeMonthStart + 2, 0)).getDate()
+      return new Date(this.activeYearEnd, this.activeMonthStart + 2, 0).getDate()
     },
     startNextActiveMonth: function () {
       return this.activeMonthStart >= 11 ? 0 : this.activeMonthStart + 1
@@ -275,7 +276,7 @@ export default {
         return null
       }
       const dateparse = new Date(Date.parse(date))
-      return fecha.format(new Date(Date.UTC(dateparse.getFullYear(), dateparse.getMonth(), dateparse.getDate())), format)
+      return fecha.format(new Date(dateparse.getFullYear(), dateparse.getMonth(), dateparse.getDate()), format)
     },
     getDayIndexInMonth: function (r, i, startMonthDay) {
       const date = (this.numOfDays * (r - 1)) + i
@@ -294,7 +295,7 @@ export default {
       } else {
         newData['end'] = null
       }
-      const resultDate = new Date(Date.UTC(activeYear, activeMonth, result))
+      const resultDate = new Date(activeYear, activeMonth, result)
       if (!this.isFirstChoice && resultDate < this.dateRange.start) {
         this.isFirstChoice = false
         return { start: resultDate }
@@ -311,9 +312,9 @@ export default {
       this.activeYearStart))
       if (this.dateRange.start && this.dateRange.end) {
         this.presetActive = ''
-        if (this.isCompact) {
-          this.showMonth = false
-        }
+        var updatedHours = new Date(this.dateRange.end.setHours(23))
+        var updatedMinutes = new Date(updatedHours.setMinutes(59))
+        this.dateRange.end = updatedMinutes
       }
     },
     selectSecondItem (r, i) {
@@ -322,6 +323,9 @@ export default {
       this.activeYearEnd))
       if (this.dateRange.start && this.dateRange.end) {
         this.presetActive = ''
+        var updatedHours = new Date(this.dateRange.end.setHours(23))
+        var updatedMinutes = new Date(updatedHours.setMinutes(59))
+        this.dateRange.end = updatedMinutes
       }
     },
     isDateSelected (r, i, key, startMonthDay, endMonthDate) {
@@ -330,9 +334,9 @@ export default {
 
       let currDate = null
       if (key === 'first') {
-        currDate = new Date(Date.UTC(this.activeYearStart, this.activeMonthStart, result))
+        currDate = new Date(this.activeYearStart, this.activeMonthStart, result)
       } else {
-        currDate = new Date(Date.UTC(this.activeYearEnd, this.startNextActiveMonth, result))
+        currDate = new Date(this.activeYearEnd, this.startNextActiveMonth, result)
       }
       return (this.dateRange.start && this.dateRange.start.getTime() === currDate.getTime()) ||
         (this.dateRange.end && this.dateRange.end.getTime() === currDate.getTime())
@@ -343,9 +347,9 @@ export default {
 
       let currDate = null
       if (key === 'first') {
-        currDate = new Date(Date.UTC(this.activeYearStart, this.activeMonthStart, result))
+        currDate = new Date(this.activeYearStart, this.activeMonthStart, result)
       } else {
-        currDate = new Date(Date.UTC(this.activeYearEnd, this.startNextActiveMonth, result))
+        currDate = new Date(this.activeYearEnd, this.startNextActiveMonth, result)
       }
       return (this.dateRange.start && this.dateRange.start.getTime() < currDate.getTime()) &&
         (this.dateRange.end && this.dateRange.end.getTime() > currDate.getTime())
@@ -356,16 +360,29 @@ export default {
       return !(result > 0 && result <= endMonthDate)
     },
     goPrevMonth () {
-      const prevMonth = new Date(Date.UTC(this.activeYearStart, this.activeMonthStart, 0))
+      const prevMonth = new Date(this.activeYearStart, this.activeMonthStart, 0)
       this.activeMonthStart = prevMonth.getMonth()
       this.activeYearStart = prevMonth.getFullYear()
       this.activeYearEnd = prevMonth.getFullYear()
     },
     goNextMonth () {
-      const nextMonth = new Date(Date.UTC(this.activeYearEnd, this.startNextActiveMonth, 1))
-      this.activeMonthStart = nextMonth.getMonth()
-      this.activeYearStart = nextMonth.getFullYear()
-      this.activeYearEnd = nextMonth.getFullYear()
+      const nextMonth = new Date(this.activeYearEnd, this.startNextActiveMonth, 1)
+      console.log(nextMonth.getMonth())
+      console.log(nextMonth.getFullYear())
+
+      let month, year
+
+      if (nextMonth.getMonth() === 11) {
+        month = 0
+        year = nextMonth.getFullYear() + 1
+      } else {
+        month = nextMonth.getMonth() + 1
+        year = nextMonth.getFullYear()
+      }
+
+      this.activeMonthStart = month
+      this.activeYearStart = year
+      this.activeYearEnd = year
     },
     updatePreset (item) {
       this.presetActive = item.label
