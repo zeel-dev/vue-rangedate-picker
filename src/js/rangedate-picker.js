@@ -52,8 +52,8 @@ const defaultPresets = function (i18n = defaultI18n) {
   return {
     today: function () {
       const n = new Date()
-      const startToday = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 0, 0)
-      const endToday = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 23, 59)
+      const startToday = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0)
+      const endToday = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59)
       return {
         label: presetRangeLabel['EN'].today,
         active: false,
@@ -65,7 +65,7 @@ const defaultPresets = function (i18n = defaultI18n) {
     },
     thisMonth: function () {
       const n = new Date()
-      const startMonth = new Date(n.getFullYear(), n.getMonth(), 2)
+      const startMonth = new Date(n.getFullYear(), n.getMonth(), 1)
       const endMonth = new Date(n.getFullYear(), n.getMonth() + 1, 1)
       return {
         label: presetRangeLabel['EN'].thisMonth,
@@ -78,7 +78,7 @@ const defaultPresets = function (i18n = defaultI18n) {
     },
     lastMonth: function () {
       const n = new Date()
-      const startMonth = new Date(n.getFullYear(), n.getMonth() - 1, 2)
+      const startMonth = new Date(n.getFullYear(), n.getMonth() - 1, 1)
       const endMonth = new Date(n.getFullYear(), n.getMonth(), 1)
       return {
         label: presetRangeLabel['EN'].lastMonth,
@@ -276,7 +276,7 @@ export default {
         return null
       }
       const dateparse = new Date(Date.parse(date))
-      return fecha.format(new Date(dateparse.getFullYear(), dateparse.getMonth(), dateparse.getDate() - 1), format)
+      return fecha.format(new Date(dateparse.getFullYear(), dateparse.getMonth(), dateparse.getDate()), format)
     },
     getDayIndexInMonth: function (r, i, startMonthDay) {
       const date = (this.numOfDays * (r - 1)) + i
@@ -307,7 +307,7 @@ export default {
       return newData
     },
     selectFirstItem (r, i) {
-      const result = this.getDayIndexInMonth(r, i, this.startMonthDay) + 1
+      const result = this.getDayIndexInMonth(r, i, this.startMonthDay)
       this.dateRange = Object.assign({}, this.dateRange, this.getNewDateRange(result, this.activeMonthStart,
       this.activeYearStart))
       if (this.dateRange.start && this.dateRange.end) {
@@ -319,6 +319,7 @@ export default {
     },
     selectSecondItem (r, i) {
       const result = this.getDayIndexInMonth(r, i, this.startNextMonthDay) + 1
+      console.log(result)
       this.dateRange = Object.assign({}, this.dateRange, this.getNewDateRange(result, this.startNextActiveMonth,
       this.activeYearEnd))
       if (this.dateRange.start && this.dateRange.end) {
@@ -326,7 +327,7 @@ export default {
       }
     },
     isDateSelected (r, i, key, startMonthDay, endMonthDate) {
-      const result = this.getDayIndexInMonth(r, i, startMonthDay) + 1
+      const result = this.getDayIndexInMonth(r, i, startMonthDay)
       if (result < 2 || result > endMonthDate + 1) return false
 
       let currDate = null

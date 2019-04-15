@@ -1,6 +1,6 @@
 {
   "name": "vue-rangedate-picker-zeel",
-  "version": "0.3.7",
+  "version": "0.3.9",
   "description": "Date picker with range selection",
   "author": "hidayat.febiansyah <hidayat.febiansyah@gmail.com>",
   "main": "dist/vue-rangedate-picker.js",
